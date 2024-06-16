@@ -9,7 +9,11 @@ grid_height: int = 5
 info_box_width: int = 500
 info_box_height: int = 500
 
-
+def trans_paste(fg_img,bg_img,alpha=1.0,box=(0,0)):
+    fg_img_trans = Image.new("RGBA",fg_img.size)
+    fg_img_trans = Image.blend(fg_img_trans,fg_img,alpha)
+    bg_img.paste(fg_img_trans,box,fg_img_trans)
+    return bg_img
 
 def resize_image(im: Image, w_factor: float, h_factor: float) -> Image:
 	
@@ -40,6 +44,11 @@ def main(mv_data: str) -> None:
 			thumb_width * grid_width + image_gap * (grid_width + 1) + info_box_width,
    			thumb_height * grid_height + image_gap * (grid_height + 1)),
 		color=(50, 50, 50))
+	
+	# create mask image for background
+
+	back_drop = Image.new("RGBA", bg.size)
+	# merged_image.paste(bg,(0,0))
 
 	# add text to background
 	text_drawer = ImageDraw.Draw(bg)
@@ -55,6 +64,15 @@ def main(mv_data: str) -> None:
 			text_drawer.text((txt_x, txt_y), txt_str, font=mv_font, fill=(255,255,255))
 
 
+	star = Image.open('star_outline.png')
+	star = resize_image(star, 0.01, 0.01)
+	star.convert('RGBA')
+
+	# _,_,_, mask = star.split()
+
+	star_half = Image.open('star_outline_half.png')
+	star_half = resize_image(star_half, 0.01, 0.01)
+
 	# paste thumbnails to background
 	for i in range(grid_width):
 		for j in range(grid_height):
@@ -62,16 +80,29 @@ def main(mv_data: str) -> None:
 			im_y = j * thumb_height + image_gap * (j+1)
 
 			bg.paste(thumbnails[i+j], (im_x, im_y))
+			# bg.paste(star, (im_x, im_y + star.size[1] - star.size[1]))
 
-	star = Image.open('star.png')
-	star = resize_image(star, 0.1, 0.1)
-	#bg.paste(star)
+			bg = trans_paste(star, bg, alpha=1.0, box=(im_x, im_y + star.size[1] - star.size[1]))
+
+
+	# # paste bg onto backdrop
+	# back_drop = Image.alpha_composite(back_drop, bg)
+
+	# for i in range(grid_width * grid_height):
+	# 	# paste stars onto thumbnails
+	# 	back_drop = Image.alpha_composite()
+			
+	# #bg.paste(star)
+
+	
 
 	bg.show()
 
 
 if __name__ == '__main__':
 	# image_path = 'images/705221-furiosa-a-mad-max-saga-0-1000-0-1500-crop.jpg'
-	main(fetch_data.get_data(30))
+	# main(fetch_data.get_data(30))
+
+	fetch_data.scrape('scooterwhiskey')
 
 

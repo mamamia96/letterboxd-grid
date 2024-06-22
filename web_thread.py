@@ -62,23 +62,16 @@ def poster_url_loaded(driver) -> bool:
 def get_html_with_js(url: str, results: list, index: int) -> str:
     options = webdriver.FirefoxOptions()
     options.add_argument('--headless')
-    # options.headless = True
     driver = webdriver.Firefox(options=options)
     driver.get(url)
 
     # Wait until the page has finished loading
     WebDriverWait(driver, 10).until(poster_url_loaded)
-    # WebDriverWait(driver, 10).until(EC.presence_of_element_located)
 
     # Get the HTML content of the page
     html = driver.page_source
 
-    # print("Headless Firefox Initialized")
     driver.quit()
     
     results[index] = html
     print(f'THREAD[{index}] finished')
-
-
-if __name__ == '__main__':
-    get_html_with_js('penios')

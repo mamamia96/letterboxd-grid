@@ -104,7 +104,7 @@ if __name__ == '__main__':
 	# image_path = 'images/705221-furiosa-a-mad-max-saga-0-1000-0-1500-crop.jpg'
 	# main(fetch_data.get_data(30))
 	t0 = time()
-	fetch_data.scrape('scooterwhiskey')
+	fetch_data.scrape2('scooterwhiskey', 6)
 	t1 = time()
 
 	print(f'PROGRAM FINISHED IN {t1-t0}')

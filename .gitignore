@@ -9,3 +9,5 @@ __pycache__/
 *.html
 *.rss
 *.txt
+tmdb_auth.py
+pseudo.txt

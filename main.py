@@ -22,9 +22,8 @@ def resize_image(im: Image, w_factor: float, h_factor: float) -> Image:
 
 	return im.resize(size=new_size)
 
-def main(mv_data: str) -> None:
-
-	#mv_font = ImageFont.truetype('FreeMono.tff', 12)
+# ('Challengers', 'Luca Guadagnino', 'images/842301-challengers-0-1000-0-1500-crop.jpg', 4),
+def main(movie_cells: str) -> None:
 	mv_font = ImageFont.load_default(size=16)
 
 	thumbnails = []
@@ -32,8 +31,8 @@ def main(mv_data: str) -> None:
 	thumb_height: int
 
 	# load and resize thumbnails
-	for mv in mv_data:
-		thumbnail = Image.open(mv[2])
+	for cell in movie_cells:
+		thumbnail = Image.open(cell.im_path)
 		thumbnails.append(resize_image(thumbnail, resize_factor, resize_factor))
 	
 	thumb_width, thumb_height = thumbnails[0].size
@@ -60,7 +59,7 @@ def main(mv_data: str) -> None:
 			txt_x = grid_width * thumb_width + image_gap * (grid_width+1)
 			txt_y = (i % grid_width) * thumb_height + image_gap * ((i % grid_width) + 1) + (j*20)
 
-			txt_str = f'{mv_data[i+j][0]} - {mv_data[i+j][1]}'
+			txt_str = f'{movie_cells[i+j].title} - {movie_cells[i+j].director}'
 
 			text_drawer.text((txt_x, txt_y), txt_str, font=mv_font, fill=(255,255,255))
 
@@ -68,8 +67,6 @@ def main(mv_data: str) -> None:
 	star = Image.open('star_outline.png')
 	star = resize_image(star, 0.01, 0.01)
 	star.convert('RGBA')
-
-	# _,_,_, mask = star.split()
 
 	star_half = Image.open('star_outline_half.png')
 	star_half = resize_image(star_half, 0.01, 0.01)
@@ -85,18 +82,6 @@ def main(mv_data: str) -> None:
 
 			bg = trans_paste(star, bg, alpha=1.0, box=(im_x, im_y + star.size[1] - star.size[1]))
 
-
-	# # paste bg onto backdrop
-	# back_drop = Image.alpha_composite(back_drop, bg)
-
-	# for i in range(grid_width * grid_height):
-	# 	# paste stars onto thumbnails
-	# 	back_drop = Image.alpha_composite()
-			
-	# #bg.paste(star)
-
-	
-
 	bg.show()
 
 
@@ -104,7 +89,13 @@ if __name__ == '__main__':
 	# image_path = 'images/705221-furiosa-a-mad-max-saga-0-1000-0-1500-crop.jpg'
 	# main(fetch_data.get_data(30))
 	t0 = time()
-	fetch_data.scrape2('scooterwhiskey', 6)
+	cells = fetch_data.scrape('scooterwhiskey', 6)
+
+	for cell in cells:
+		print(f'{cell.title}')
+	# main(cells)
+
+
 	t1 = time()
 
 	print(f'PROGRAM FINISHED IN {t1-t0}')

@@ -12,7 +12,6 @@ import aiohttp
 import asyncio
 import aiofiles
 from moviecell import MovieCell
-#('Challengers', 'Luca Guadagnino', 'images/842301-challengers-0-1000-0-1500-crop.jpg', 4),
 
 async def download(name_url: tuple[str], session):
     url = name_url[1]
@@ -20,7 +19,6 @@ async def download(name_url: tuple[str], session):
     async with session.get(url) as response:
         async with aiofiles.open(filename, "wb") as f:
             await f.write(await response.read())
-
 
 async def download_all(name_urls: list[tuple]):
     async with aiohttp.ClientSession() as session:
@@ -65,7 +63,7 @@ def scrape(user: str, month: int) -> list:
 
     def get_tmdb_id(item) -> int:
         return int(re.split(pattern='<|>', string=str(item.find("tmdb:movieId")))[2])
-    
+
     def title_to_image_path(path: str):
         return 'images/' + path.replace(' ', '-') + '.png'
 

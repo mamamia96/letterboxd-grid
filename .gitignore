@@ -13,3 +13,4 @@ tmdb_auth.py
 pseudo.txt
 ratio_tester.py
 grid_size_algorithm_notes.md
+__pycache__/fetch_data.cpython-312.pyc

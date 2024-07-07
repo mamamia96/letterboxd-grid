@@ -7,6 +7,7 @@ from PIL import Image, ImageDraw, ImageFont
 from grid_shape import get_grid_size
 import json
 from functools import partial
+import datetime
 
 def trans_paste(fg_img, bg_img, alpha=1.0, box=(0, 0)):
     fg_img_trans = Image.new("RGBA", fg_img.size)
@@ -91,10 +92,15 @@ def build(movie_cells: list["MovieCell"], username: str, config_path: str) -> Im
     info_font = ImageFont.truetype('./font/JuliaMono-Bold.ttf', movie_info_font_size, encoding='utf-8')
     username_font = ImageFont.truetype('./font/JuliaMono-Bold.ttf', username_font_size, encoding='utf-8')
     text_drawer = ImageDraw.Draw(bg)
-    username_width, username_height = get_text_dimensions(username, username_font)
+	
+    # writing username and date to image
+    my_date = datetime.datetime.now()
+    username_str = f'{username} - {my_date.strftime("%B")} {my_date.strftime("%Y")}'
+    username_width, username_height = get_text_dimensions(username_str, username_font)
     username_x = bg._size[0]//2 - username_width//2
     username_y = username_box_height//2 - username_height//2
-    text_drawer.text((username_x, username_y), username, font=username_font, fill=tuple(font_color))
+
+    text_drawer.text((username_x, username_y), username_str, font=username_font,fill=tuple(font_color))
 
     cell_index = 0
 	

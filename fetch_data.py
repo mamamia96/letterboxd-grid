@@ -2,7 +2,6 @@
 eventually API calls will be in place here to extract data
 """
 
-from examples import data
 from bs4 import BeautifulSoup
 import requests
 from datetime import datetime
